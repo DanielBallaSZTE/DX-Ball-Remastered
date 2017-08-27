@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>SET_SPEED = 4;
+            <string>SET_SPEED = 6;
 
 randomize();
 ran = random_range(0, 1)
@@ -73,14 +73,17 @@ if (ran &gt; 0 &amp;&amp; ran &lt; 0.25) {
 if (x - sprite_width / 2 &lt; 0)
 {
     hor_speed *= -1;
+    x += 1;
 }
 if (x + sprite_width / 2 &gt; room_width)
 {
     hor_speed *= -1;
+    x -= 1;
 }
 if (y - sprite_height / 2 &lt; 0)
 {
     ver_speed *= -1;
+    y += 1;
 }
 
 // Player collisions
@@ -92,35 +95,15 @@ if ((distance_to_object(obj_player) &lt; 1) &amp;&amp; (ver_speed &gt; 0) &amp;&
 
 // Brick collision system
 
-if (distance_to_object(obj_brick) &lt;= 1)
+brick_id = instance_nearest(x, y, obj_brick);
+// Above, but not outside
+if (collision_line(brick_id.x - brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, brick_id.x + brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, obj_ball, false, false))
 {
-    brick_id = instance_nearest(x, y, obj_brick);
     if (!global.pass_through)
+        ver_speed *= -1;
+
+    with (brick_id)
     {
-        // Above, but not outside
-        if (y - sprite_height / 2 == brick_id.y + brick_id.sprite_height / 2)
-        {
-            if (x + sprite_width / 2 &gt;= brick_id.x - brick_id.sprite_width / 2 &amp;&amp; x - sprite_width &lt;= brick_id.x + brick_id.sprite_width / 2)
-            {
-                ver_speed *= -1;
-            }
-        }
-        // Below, but not outside
-        else if (y + sprite_height / 2 == brick_id.y - brick_id.sprite_height / 2)
-        {
-            if (x + sprite_width / 2 &gt;= brick_id.x - brick_id.sprite_width / 2 &amp;&amp; x - sprite_width &lt;= brick_id.x + brick_id.sprite_width / 2)
-            {
-                ver_speed *= -1;
-            }        
-        }
-        // Outside, not above, not below
-        else
-        {
-            hor_speed *= -1;
-        }
-    }  
-    
-    with (brick_id) {
         if (type == "power")
         {
             generate_power();
@@ -128,6 +111,49 @@ if (distance_to_object(obj_brick) &lt;= 1)
         instance_destroy();
     }
 }
+else if (collision_line(brick_id.x - brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, brick_id.x + brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, obj_ball, false, false))
+{
+    if (!global.pass_through)
+        ver_speed *= -1;
+
+    with (brick_id)
+    {
+        if (type == "power")
+        {
+            generate_power();
+        }
+        instance_destroy();
+    }
+}
+else if (collision_line(brick_id.x - brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, brick_id.x - brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, obj_ball, false, false))
+{
+    if (!global.pass_through)
+        hor_speed *= -1;
+
+    with (brick_id)
+    {
+        if (type == "power")
+        {
+            generate_power();
+        }
+        instance_destroy();
+    }
+}
+else if (collision_line(brick_id.x + brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, brick_id.x + brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, obj_ball, false, false))
+{
+    if (!global.pass_through)
+        hor_speed *= -1;
+
+    with (brick_id)
+    {
+        if (type == "power")
+        {
+            generate_power();
+        }
+        instance_destroy();
+    }
+}
+
 
 if (keyboard_check_released(vk_space))
 {
