@@ -26,6 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>SET_SPEED = 2;
+destroy = false;
 
 randomize();
 ran = random_range(0, 1)
@@ -44,10 +45,6 @@ if (ran &gt; 0 &amp;&amp; ran &lt; 0.25) {
     hor_speed = -SET_SPEED;
 }
 
-top_of_ball = y - sprite_width / 2;
-bottom_of_ball = y + sprite_width / 2;
-right_side_ball = x + sprite_width / 2;
-left_side_ball = x - sprite_width / 2;
 
 tick = 0;
 </string>
@@ -76,6 +73,7 @@ tick = 0;
  * Collisions with objects, bounce offs 
  */
 
+tick++;
 // Side of room collisions
 if (x - sprite_width / 2 &lt; 0)
 {
@@ -103,48 +101,69 @@ if ((distance_to_object(obj_player) &lt; 1) &amp;&amp; (ver_speed &gt; 0) &amp;&
 // Brick collision system
 
 brick_id = instance_nearest(x, y, obj_brick);
-BRICK_TOP = brick_id.y - brick_id.sprite_height / 2;
-BRICK_BOTTOM = brick_id.y + brick_id.sprite_height / 2;
-BRICK_LEFT = brick_id.x - brick_id.sprite_width / 2;
-BRICK_RIGHT = brick_id.x + brick_id.sprite_width / 2;
-// top of ball, bottom of brick
-if (point_in_triangle(x, top_of_ball, BRICK_LEFT, BRICK_BOTTOM, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_BOTTOM))
-{
-    show_debug_message("bottom " + string(tick));
-    ver_speed *= -1;
-    with (brick_id)
+if (instance_exists(brick_id)){
+    BRICK_TOP = brick_id.y - brick_id.sprite_height / 2;
+    BRICK_BOTTOM = brick_id.y + brick_id.sprite_height / 2;
+    BRICK_LEFT = brick_id.x - brick_id.sprite_width / 2;
+    BRICK_RIGHT = brick_id.x + brick_id.sprite_width / 2;
+    
+    coll_x = x;
+    coll_y = y;
+    
+    if (distance_to_object(brick_id) &lt; sqrt(abs(hor_speed * ver_speed)))
     {
-        instance_destroy();
+        if (x &lt; BRICK_LEFT ) {
+            coll_x = x + distance_to_object(brick_id);
+        } else if (x &gt; BRICK_RIGHT) {
+            coll_x = x - distance_to_object(brick_id);
+        }
+        if (y &lt; BRICK_TOP) {
+            coll_y = y + distance_to_object(brick_id);
+        } else if (y &gt; BRICK_BOTTOM) {
+            coll_y = y - distance_to_object(brick_id);
+        }
     }
-}
-// bottom of ball, top of brick
-if (point_in_triangle(x, bottom_of_ball, BRICK_LEFT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_TOP))
-{
-    show_debug_message("top" + string(tick));
-    ver_speed *= -1;
-    with (brick_id)
+    
+    top_of_ball = coll_y - sprite_height / 2;
+    bottom_of_ball = coll_y + sprite_height / 2;
+    right_side_ball = coll_x + sprite_width / 2;
+    left_side_ball = coll_x - sprite_width / 2;
+
+    // top of ball, bottom of brick
+    if (point_in_triangle(coll_x, top_of_ball, BRICK_LEFT, BRICK_BOTTOM, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_BOTTOM))
     {
-        instance_destroy();
+        show_debug_message("bottom " + string(tick));
+        ver_speed *= -1;
+        destroy = true;
     }
-}
-// right side of ball, left side of brick
-if (point_in_triangle(right_side_ball, y, BRICK_LEFT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_LEFT, BRICK_BOTTOM))
-{
-    show_debug_message("left" + string(tick));
-    hor_speed *= -1;
-    with (brick_id)
+    // bottom of ball, top of brick
+    else if (point_in_triangle(coll_x, bottom_of_ball, BRICK_LEFT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_TOP))
     {
-        instance_destroy();
+        show_debug_message("top" + string(tick));
+        ver_speed *= -1;
+        destroy = true;
     }
-}
-// left side of ball, right side of brick
-if (point_in_triangle(left_side_ball, y, BRICK_RIGHT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_BOTTOM))
-{
-    show_debug_message("right" + string(tick));
-    hor_speed *= -1;
-    with (brick_id)
+    // right side of ball, left side of brick
+    else if (point_in_triangle(right_side_ball, coll_y, BRICK_LEFT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_LEFT, BRICK_BOTTOM))
     {
-        instance_destroy();
+        show_debug_message("left" + string(tick));
+        hor_speed *= -1;
+        destroy = true;
+    }
+    // left side of ball, right side of brick
+    else if (point_in_triangle(left_side_ball, coll_y, BRICK_RIGHT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_BOTTOM))
+    {
+        show_debug_message("right" + string(tick));
+        hor_speed *= -1;
+        destroy = true;
+    }
+    if (destroy)
+    {
+        with (brick_id)
+        {
+                instance_destroy();
+        }
+        destroy = false;
     }
 }
 
@@ -236,11 +255,6 @@ if (keyboard_check_released (ord ('E')))
           <argument>
             <kind>1</kind>
             <string>draw_self();
-draw_set_colour(c_red);
-draw_triangle(BRICK_LEFT, BRICK_BOTTOM, BRICK_RIGHT, BRICK_BOTTOM, brick_id.x, brick_id.y, 0);
-draw_triangle(BRICK_LEFT, BRICK_TOP, BRICK_RIGHT, BRICK_TOP, brick_id.x, brick_id.y, 0);
-draw_triangle(BRICK_RIGHT, BRICK_TOP, BRICK_RIGHT, BRICK_BOTTOM, brick_id.x, brick_id.y, 0);
-draw_triangle(BRICK_LEFT, BRICK_TOP, BRICK_LEFT, BRICK_BOTTOM, brick_id.x, brick_id.y, 0);
 </string>
           </argument>
         </arguments>
