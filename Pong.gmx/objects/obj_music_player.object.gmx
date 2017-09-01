@@ -25,13 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if (sound_exists(why_we_lose))
-{
-    s_name = sound_get_name(why_we_lose);
-    audio_master_gain(0.3);
-    audio_play_sound(why_we_lose, 1, 0);
-}
-</string>
+            <string></string>
           </argument>
         </arguments>
       </action>
@@ -53,8 +47,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_text(10, 10, "Currently playing: " + string(s_name));
-</string>
+            <string></string>
           </argument>
         </arguments>
       </action>

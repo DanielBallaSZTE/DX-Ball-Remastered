@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>SET_SPEED = 6;
+            <string>SET_SPEED = 2;
 
 randomize();
 ran = random_range(0, 1)
@@ -43,6 +43,13 @@ if (ran &gt; 0 &amp;&amp; ran &lt; 0.25) {
     ver_speed = -SET_SPEED;
     hor_speed = -SET_SPEED;
 }
+
+top_of_ball = y - sprite_width / 2;
+bottom_of_ball = y + sprite_width / 2;
+right_side_ball = x + sprite_width / 2;
+left_side_ball = x - sprite_width / 2;
+
+tick = 0;
 </string>
           </argument>
         </arguments>
@@ -96,64 +103,50 @@ if ((distance_to_object(obj_player) &lt; 1) &amp;&amp; (ver_speed &gt; 0) &amp;&
 // Brick collision system
 
 brick_id = instance_nearest(x, y, obj_brick);
-// Above, but not outside
-if (collision_line(brick_id.x - brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, brick_id.x + brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, obj_ball, false, false))
+BRICK_TOP = brick_id.y - brick_id.sprite_height / 2;
+BRICK_BOTTOM = brick_id.y + brick_id.sprite_height / 2;
+BRICK_LEFT = brick_id.x - brick_id.sprite_width / 2;
+BRICK_RIGHT = brick_id.x + brick_id.sprite_width / 2;
+// top of ball, bottom of brick
+if (point_in_triangle(x, top_of_ball, BRICK_LEFT, BRICK_BOTTOM, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_BOTTOM))
 {
-    if (!global.pass_through)
-        ver_speed *= -1;
-
+    show_debug_message("bottom " + string(tick));
+    ver_speed *= -1;
     with (brick_id)
     {
-        if (type == "power")
-        {
-            generate_power();
-        }
         instance_destroy();
     }
 }
-else if (collision_line(brick_id.x - brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, brick_id.x + brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, obj_ball, false, false))
+// bottom of ball, top of brick
+if (point_in_triangle(x, bottom_of_ball, BRICK_LEFT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_TOP))
 {
-    if (!global.pass_through)
-        ver_speed *= -1;
-
+    show_debug_message("top" + string(tick));
+    ver_speed *= -1;
     with (brick_id)
     {
-        if (type == "power")
-        {
-            generate_power();
-        }
         instance_destroy();
     }
 }
-else if (collision_line(brick_id.x - brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, brick_id.x - brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, obj_ball, false, false))
+// right side of ball, left side of brick
+if (point_in_triangle(right_side_ball, y, BRICK_LEFT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_LEFT, BRICK_BOTTOM))
 {
-    if (!global.pass_through)
-        hor_speed *= -1;
-
+    show_debug_message("left" + string(tick));
+    hor_speed *= -1;
     with (brick_id)
     {
-        if (type == "power")
-        {
-            generate_power();
-        }
         instance_destroy();
     }
 }
-else if (collision_line(brick_id.x + brick_id.sprite_width / 2, brick_id.y - brick_id.sprite_height / 2, brick_id.x + brick_id.sprite_width / 2, brick_id.y + brick_id.sprite_height / 2, obj_ball, false, false))
+// left side of ball, right side of brick
+if (point_in_triangle(left_side_ball, y, BRICK_RIGHT, BRICK_TOP, brick_id.x, brick_id.y, BRICK_RIGHT, BRICK_BOTTOM))
 {
-    if (!global.pass_through)
-        hor_speed *= -1;
-
+    show_debug_message("right" + string(tick));
+    hor_speed *= -1;
     with (brick_id)
     {
-        if (type == "power")
-        {
-            generate_power();
-        }
         instance_destroy();
     }
 }
-
 
 if (keyboard_check_released(vk_space))
 {
@@ -220,6 +213,34 @@ if (keyboard_check_released (ord ('E')))
         global.pass_through = false;
     }
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>draw_self();
+draw_set_colour(c_red);
+draw_triangle(BRICK_LEFT, BRICK_BOTTOM, BRICK_RIGHT, BRICK_BOTTOM, brick_id.x, brick_id.y, 0);
+draw_triangle(BRICK_LEFT, BRICK_TOP, BRICK_RIGHT, BRICK_TOP, brick_id.x, brick_id.y, 0);
+draw_triangle(BRICK_RIGHT, BRICK_TOP, BRICK_RIGHT, BRICK_BOTTOM, brick_id.x, brick_id.y, 0);
+draw_triangle(BRICK_LEFT, BRICK_TOP, BRICK_LEFT, BRICK_BOTTOM, brick_id.x, brick_id.y, 0);
 </string>
           </argument>
         </arguments>
