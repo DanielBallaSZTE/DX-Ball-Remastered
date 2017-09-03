@@ -4,7 +4,7 @@ var balls;
 
 for (i = 0; i < 6; i++)
 {
-    balls[i] = instance_create(x, y, obj_ball);
+    balls[i] = instance_create(obj_ball.x, obj_ball.y, obj_ball);
 }
 
 balls[0].ver_speed = SET_SPEED;

@@ -155,9 +155,31 @@ for (var i = 0; i &lt; SET_SPEED; i++)
         if (destroy)
         {
             generate_power(brick_id);
-            with (brick_id)
+            if (global.fire_ball)
             {
-                    instance_destroy();
+                while (true)
+                {
+                    if (distance_to_object(obj_brick) &lt; 30)
+                    {
+                        var inst_id = instance_nearest(x, y, obj_brick);
+                        with (inst_id)
+                        {
+                            generate_power(inst_id);
+                            instance_destroy();
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                with (brick_id)
+                {
+                        instance_destroy();
+                }
             }
             destroy = false;
         }

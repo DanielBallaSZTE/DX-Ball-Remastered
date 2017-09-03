@@ -24,7 +24,7 @@
     <script>scripts\super_ball.gml</script>
     <script>scripts\fast_ball.gml</script>
     <script>scripts\slow_ball.gml</script>
-    <script>scripts\fire_ball.gml</script>
+    <script>scripts\power_fire_ball.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font1</font>

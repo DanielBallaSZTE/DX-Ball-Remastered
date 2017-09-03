@@ -27,6 +27,7 @@
             <kind>1</kind>
             <string>global.p_lives = 3;
 global.pass_through = false;
+global.fire_ball = false;
 </string>
           </argument>
         </arguments>

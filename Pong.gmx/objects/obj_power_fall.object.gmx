@@ -26,6 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>angle = 0;
+power_type = -1;
 </string>
           </argument>
         </arguments>
@@ -48,13 +49,44 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>angle++;
+            <string>// Spin around
+angle++;
 y += 2;
 image_angle = angle;
 
 if (angle == 360)
 {
     angle = 0;
+}
+
+// Player collision
+// Power collision
+if (distance_to_object(obj_player) &lt; 1)
+{
+    switch (power_type)
+    {
+        case 0:
+            multiballs();
+            break;
+        case 1:
+            power_fire_ball();
+            break;
+        case 2:
+            super_ball();
+            break;
+        case 3:
+            pass_through_ball();
+            break;
+        case 4:
+            fast_ball();
+            break;
+        case 5:
+            slow_ball();
+            break;
+    }
+    show_message(power_type);
+
+    instance_destroy();
 }
 </string>
           </argument>
