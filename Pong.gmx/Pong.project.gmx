@@ -10,7 +10,6 @@
     <sprite>sprites\spr_brick</sprite>
     <sprite>sprites\spr_ball</sprite>
     <sprite>sprites\spr_power</sprite>
-    <sprite>sprites\sprite4</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -18,7 +17,12 @@
     <script>scripts\check_pos.gml</script>
     <script>scripts\ball_out.gml</script>
     <script>scripts\generate_power.gml</script>
-    <script>scripts\power_multiballs.gml</script>
+    <script>scripts\multiballs.gml</script>
+    <script>scripts\pass_through_ball.gml</script>
+    <script>scripts\super_ball.gml</script>
+    <script>scripts\fast_ball.gml</script>
+    <script>scripts\slow_ball.gml</script>
+    <script>scripts\fire_ball.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font1</font>
@@ -29,6 +33,7 @@
     <object>objects\obj_brick_power</object>
     <object>objects\obj_brick</object>
     <object>objects\obj_music_player</object>
+    <object>objects\obj_power_fall</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\main</room>

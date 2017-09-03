@@ -120,32 +120,41 @@ for (var i = 0; i &lt; SET_SPEED; i++)
         if (collision_line(BRICK_LEFT, BRICK_BOTTOM, BRICK_RIGHT, BRICK_BOTTOM, obj_ball, 1, 0))
         {
             show_debug_message("bottom " + string(tick));
-            ver_speed *= -1;
+            if (!global.pass_through)
+                ver_speed *= -1;
+
             destroy = true;
         }
         // bottom of ball, top of brick
         else if (collision_line(BRICK_LEFT, BRICK_TOP, BRICK_RIGHT, BRICK_TOP, obj_ball, 1, 0))
         {
             show_debug_message("top" + string(tick));
-            ver_speed *= -1;
+            if (!global.pass_through)
+                ver_speed *= -1;
+
             destroy = true;
         }
         // right side of ball, left side of brick
         else if (collision_line(BRICK_LEFT, BRICK_BOTTOM, BRICK_LEFT, BRICK_TOP, obj_ball, 1, 0))
         {
             show_debug_message("left" + string(tick));
-            hor_speed *= -1;
+            if (!global.pass_through)
+                hor_speed *= -1;
+
             destroy = true;
         }
         // left side of ball, right side of brick
         else if (collision_line(BRICK_RIGHT, BRICK_BOTTOM, BRICK_RIGHT, BRICK_TOP, obj_ball, 1, 0))
         {
             show_debug_message("right" + string(tick));
-            hor_speed *= -1;
+            if (!global.pass_through)
+                hor_speed *= -1;
+
             destroy = true;
         }
         if (destroy)
         {
+            generate_power(brick_id);
             with (brick_id)
             {
                     instance_destroy();
@@ -157,9 +166,10 @@ for (var i = 0; i &lt; SET_SPEED; i++)
     y += ver_speed / SET_SPEED;
 }
 
-if (keyboard_check_released(vk_space))
+if (ver_speed == 0)
 {
-    if (!ver_speed)
+    x = obj_player.x;
+    if (keyboard_check_released(vk_space))
     {
         ver_speed = -SET_SPEED;
     }
@@ -203,22 +213,6 @@ if (global.p_lives == 0) {
     game_end();    
 }
 
-// DEBUG
-if (keyboard_check_released (ord ('R')))
-{
-    power_multiballs();
-}
-if (keyboard_check_released (ord ('E')))
-{
-    if (!global.pass_through)
-    {
-        global.pass_through = true;
-    }
-    else
-    {
-        global.pass_through = false;
-    }
-}
 </string>
           </argument>
         </arguments>

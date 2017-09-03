@@ -4,17 +4,32 @@ with (brick_id)
 {
     if (type == "power")
     {
-        ran = random_range(0, 3)
-        if (ran < 1)
+        ran = irandom(6);
+        if (!ran)
         {
-            power_multiballs();    
+            multiballs();    
         }
-        else
+        else if (ran == 1)
         {
-            global.pass_through = true;
+            pass_through_ball();
 
         }
+        else if (ran == 2)
+        {
+            super_ball();
+        }
+        else if (ran == 3)
+        {
+            fast_ball();
+        }
+        else if (ran == 4)
+        {
+            slow_ball();
+        }
+        else if (ran == 5)
+        {
+            fire_ball();
+        }
     }
-    instance_destroy();
 }
 
