@@ -10,12 +10,14 @@
     <sprite>sprites\spr_brick</sprite>
     <sprite>sprites\spr_ball</sprite>
     <sprite>sprites\spr_power</sprite>
+    <sprite>sprites\spr_power_fireball</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\check_pos.gml</script>
     <script>scripts\ball_out.gml</script>
+    <script>scripts\spawn_power.gml</script>
     <script>scripts\generate_power.gml</script>
     <script>scripts\multiballs.gml</script>
     <script>scripts\pass_through_ball.gml</script>

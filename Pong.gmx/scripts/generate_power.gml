@@ -7,28 +7,27 @@ with (brick_id)
         ran = irandom(6);
         if (!ran)
         {
-            multiballs();    
+            spawn_power(argument0, 0);
         }
         else if (ran == 1)
         {
-            pass_through_ball();
-
+            spawn_power(argument0, 1);
         }
         else if (ran == 2)
         {
-            super_ball();
+            spawn_power(argument0, 2);
         }
         else if (ran == 3)
         {
-            fast_ball();
+            spawn_power(argument0, 3);
         }
         else if (ran == 4)
         {
-            slow_ball();
+            spawn_power(argument0, 4);
         }
         else if (ran == 5)
         {
-            fire_ball();
+            spawn_power(argument0, 5);
         }
     }
 }
